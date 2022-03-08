@@ -1,0 +1,26 @@
+extend ../layout/index
+
+block container 
+    h1 Thêm vé dò
+    form.mt-4#form(method='POST' action='/admin/band/add' enctype="multipart/form-data")
+        if message
+            .alert.alert-success= message
+        .mb-3
+            label(for='name') Chọn ngày
+            input#ngay.form-control(type='date' name='ngay')
+        .mb-3
+            label(for='name') Chọn miền
+            select#mien.form-control(type='select' name='mien')
+                option(value="mn") Miền Nam
+                option(value="mt") Miền Trung
+                option(value="mb") Miền Bắc
+        .mb-3
+            label(for='name') Chọn đài
+            select#dai.form-control(type='text' name='dai')
+                option Chon ngày và miền trước
+        .mb-3
+            button.btn.btn-primary(type='submit') Thêm vé dò
+
+
+block script 
+    script(src="/asset/jsm/admin/vedoAdd.js")

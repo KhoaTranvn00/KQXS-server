@@ -1,0 +1,12 @@
+extend ../layout/index
+
+block container 
+    h1 Thêm đài
+    form.mt-4#form(method='POST' action='/admin/band/add' enctype="multipart/form-data")
+        if message
+            .alert.alert-success= message
+        .mb-3
+            label(for='name') Tên đài
+            input#name.form-control(type='text' name='ten')
+        .mb-3
+            button.btn.btn-primary(type='submit') Thêm đài

@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\NodiJS\\CHMP"
+		},
+		{
+			"path": "..\\HTML_CSS\\KQXS"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "KQXS"
+	}
+}
