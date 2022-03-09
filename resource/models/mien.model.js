@@ -7,6 +7,7 @@ const ObjectID = mongoose.Schema.Types.ObjectId;
 const MienSchema = new Schema({
 	_id: { type: "String", required: true },
 	ten: { type: "String", required: true },
+	updatedAt: { type: "Date" },
 });
 
 module.exports = mongoose.model("mien", MienSchema);

@@ -8,12 +8,13 @@ const Schema = mongoose.Schema;
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 const KetQuaSchema = new Schema({
-	// ten: { type: "String", required: true },
 	ketqua: [{ type: "Array", required: true }],
-	loaive: { type: "String", required: true },
-	dai: { type: ObjectId, ref: dai, required: true },
-	ngay: { type: "Date", required: true },
+	loaive: { type: "String" },
+	dai: { type: ObjectId, ref: dai, required: true, index: true },
+	ngay: { type: "Date", required: true, index: true },
 	thu: { type: "Number", ref: thu },
 });
+
+KetQuaSchema.index({ dai: 1, ngay: 1 }, { unique: true });
 
 module.exports = mongoose.model("ketQua", KetQuaSchema);

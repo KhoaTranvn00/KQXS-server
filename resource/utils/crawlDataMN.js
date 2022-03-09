@@ -2,20 +2,19 @@ const request = require("request-promise");
 const cheerio = require("cheerio");
 
 const dais = require("../models/dai.model");
-const ketquas = require("../models/ketqua.model");
+const ketQuaModel = require("../models/ketqua.model");
 
-const crawlData = async (daiSlug, ngaySo) => {
+const crawlDataMN = async (daiSlug, ngaySo) => {
 	let result = null;
 	let dai = "";
 	const url = `https://www.minhngoc.com.vn/getkqxs/${daiSlug}/${ngaySo}.js`;
-	console.log("url " + url);
+	console.log(url);
 	await request.get(url, (err, response, body) => {
 		if (err) {
 			console.log(err);
 		} else {
 			const $ = cheerio.load(body);
 			dai = $(body).find("div.title").text().trim().slice(5, -11);
-
 			const ngaytho = $(body)
 				.find("div.title")
 				.text()
@@ -47,10 +46,11 @@ const crawlData = async (daiSlug, ngaySo) => {
 			result = { ngay, loaive, ketqua };
 		}
 	});
+	console.log(result);
 	const daiId = await dais.findOne({ ten: dai });
-	result = { ...result, daiId: daiId._id };
-	console.log("result crawlData" + result);
+	if (!daiId) return null;
+	result = { ...result, dai: daiId._id };
 	return result;
 };
 
-module.exports = crawlData;
+module.exports = crawlDataMN;

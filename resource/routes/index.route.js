@@ -1,12 +1,10 @@
 const express = require("express");
 const route = express.Router();
 
-const adminRoute = require("./admin/index.route");
-const apiRoute = require("./utils/index.route");
 const testRoute = require("./test.route");
+const adminRoute = require("./admin/index.route");
 
-route.use("/api", apiRoute);
-route.use("/admin", adminRoute);
 route.use("/test", testRoute);
+route.use("/admin", adminRoute);
 
 module.exports = route;
