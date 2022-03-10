@@ -1,4 +1,4 @@
-const formatterDate = {
+const formatDate = {
 	// data: dd-mm-yyyy
 	dayMonth: (dateString) => {
 		const date = dateString.split("-");
@@ -7,4 +7,4 @@ const formatterDate = {
 	},
 };
 
-module.exports = formatterDate;
+module.exports = formatDate;

@@ -3,7 +3,7 @@ const crawlDataMB = require("../../utils/crawlDataMB");
 const crawlDataMN = require("../../utils/crawlDataMN");
 const crawlDataMT = require("../../utils/crawlDataMT");
 const daiTheoNgay = require("../../utils/daiTheoNgay");
-const formatterDate = require("../../utils/formateDate");
+const formatterDate = require("../../utils/formatDate");
 
 const setKQXS = {
 	setMN: async (req, res) => {

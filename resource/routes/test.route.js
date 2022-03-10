@@ -8,7 +8,7 @@ const dais = require("../models/dai.model");
 const ketquaModel = require("../models/ketqua.model");
 const crawlDataMN = require("../utils/crawlDataMN");
 const DaiTheoNgay = require("../utils/daiTheoNgay");
-const formatterDate = require("../utils/formateDate");
+const formatterDate = require("../utils/formatDate");
 const crawlDataMT = require("../utils/crawlDataMT");
 const crawlDataMB = require("../utils/crawlDataMB");
 
