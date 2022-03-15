@@ -8,6 +8,8 @@ const crawlDataMN = async (daiSlug, ngaySo) => {
 	let result = null;
 	let dai = "";
 	const url = `https://www.minhngoc.com.vn/getkqxs/${daiSlug}/${ngaySo}.js`;
+	// const url = `https://www.minhngoc.com.vn/getkqxs/${daiSlug}/${ngaySo}.js`;
+
 	console.log(url);
 	await request.get(url, (err, response, body) => {
 		if (err) {

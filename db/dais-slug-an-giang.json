@@ -1,0 +1,289 @@
+[{
+  "_id": {
+    "$oid": "61ee1a5c1fbf1ea279b40ca7"
+  },
+  "ten": "An Giang",
+  "slug": "an-giang",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1a5c1fbf1ea279b40ca8"
+  },
+  "ten": "Cà Mau",
+  "slug": "ca-mau",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1c7b797626e7aac5ebff"
+  },
+  "ten": "Đồng Tháp",
+  "slug": "dong-thap",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1c7b797626e7aac5ec00"
+  },
+  "ten": "TP. HCM",
+  "slug": "tp-hcm",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1c7b797626e7aac5ec01"
+  },
+  "ten": "Bạc Liêu",
+  "slug": "bac-lieu",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1c7b797626e7aac5ec02"
+  },
+  "ten": "Bến Tre",
+  "slug": "ben-tre",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1c7b797626e7aac5ec03"
+  },
+  "ten": "Vũng Tàu",
+  "slug": "vung-tau",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1c7b797626e7aac5ec04"
+  },
+  "ten": "Cần Thơ",
+  "slug": "can-tho",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1c7b797626e7aac5ec05"
+  },
+  "ten": "Đồng Nai",
+  "slug": "dong-nai",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1c7b797626e7aac5ec06"
+  },
+  "ten": "Sóc Trăng",
+  "slug": "soc-trang",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1d37bf18fba4ecd5aa83"
+  },
+  "ten": "Bình Thuận",
+  "slug": "binh-thuan",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1d37bf18fba4ecd5aa84"
+  },
+  "ten": "Tây Ninh",
+  "slug": "tay-ninh",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1d37bf18fba4ecd5aa85"
+  },
+  "ten": "Bình Dương",
+  "slug": "binh-duong",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1d37bf18fba4ecd5aa86"
+  },
+  "ten": "Trà Vinh",
+  "slug": "tra-vinh",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1d37bf18fba4ecd5aa87"
+  },
+  "ten": "Vĩnh Long",
+  "slug": "vinh-long",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1d37bf18fba4ecd5aa88"
+  },
+  "ten": "Bình Phước",
+  "slug": "binh-phuoc",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1d37bf18fba4ecd5aa89"
+  },
+  "ten": "Hậu Giang",
+  "slug": "hau-giang",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1d37bf18fba4ecd5aa8a"
+  },
+  "ten": "Long An",
+  "slug": "long-an",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1d37bf18fba4ecd5aa8b"
+  },
+  "ten": "Đà Lạt",
+  "slug": "da-lat",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1d37bf18fba4ecd5aa8c"
+  },
+  "ten": "Kiên Giang",
+  "slug": "kien-giang",
+  "mien": "mn",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de564778"
+  },
+  "ten": "Phú Yên",
+  "slug": "phu-yen",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de564779"
+  },
+  "ten": "Thừa Thiên Huế",
+  "slug": "thua-thien-hue",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de56477a"
+  },
+  "ten": "Đắk Lắk",
+  "slug": "dak-lak",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de56477b"
+  },
+  "ten": "Quảng Nam",
+  "slug": "quang-nam",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de56477c"
+  },
+  "ten": "Bình Định",
+  "slug": "binh-dinh",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de56477d"
+  },
+  "ten": "Quảng Bình",
+  "slug": "quang-binh",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de56477e"
+  },
+  "ten": "Quảng Trị",
+  "slug": "quang-tri",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de56477f"
+  },
+  "ten": "Ninh Thuận",
+  "slug": "ninh-thuan",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de564780"
+  },
+  "ten": "Gia Lai",
+  "slug": "gia-lai",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de564781"
+  },
+  "ten": "Đắk Nông",
+  "slug": "dak-nong",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de564782"
+  },
+  "ten": "Quảng Ngãi",
+  "slug": "quang-ngai",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de564783"
+  },
+  "ten": "Kon Tum",
+  "slug": "kon-tum",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de564784"
+  },
+  "ten": "Đà Nẵng",
+  "slug": "da-nang",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1f1ec982c3b9de564785"
+  },
+  "ten": "Khánh Hòa",
+  "slug": "khanh-hoa",
+  "mien": "mt",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61ee1fcb0529b00ba70b1368"
+  },
+  "ten": "Miền Bắc",
+  "slug": "mien-bac",
+  "mien": "mb",
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "61eea64d7ad89c3cef2d2452"
+  },
+  "ten": "Tiền Giang",
+  "slug": "tien-giang",
+  "mien": "mn",
+  "__v": 0
+}]

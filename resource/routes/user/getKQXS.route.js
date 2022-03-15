@@ -12,4 +12,6 @@ route.get("/mien-bac/thu/:slug", controller.thuMB);
 
 route.get("/:slug", controller.daiMN);
 
+route.get("/", controller.getToday);
+
 module.exports = route;

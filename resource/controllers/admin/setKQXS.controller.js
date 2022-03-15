@@ -30,6 +30,7 @@ const setKQXS = {
 			res.status(400).json({
 				success: false,
 				message: "Thêm KQXS thất bại",
+				error: error.message,
 			});
 		}
 	},

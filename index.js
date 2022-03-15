@@ -4,7 +4,7 @@ const cors = require("cors");
 
 const db = require("./config/db");
 const route = require("./resource/routes/index.route");
-const PORT = 3000;
+const PORT = 4000;
 
 // Connect DB
 db.connect();
