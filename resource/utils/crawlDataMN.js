@@ -1,57 +1,57 @@
 const request = require("request-promise");
 const cheerio = require("cheerio");
 
-const dais = require("../models/dai.model");
-const ketQuaModel = require("../models/ketqua.model");
+const formatDate = require("./formatDate");
 
-const crawlDataMN = async (daiSlug, ngaySo) => {
+const crawlDataMN = async (dai, ngay) => {
 	let result = null;
-	let dai = "";
-	const url = `https://www.minhngoc.com.vn/getkqxs/${daiSlug}/${ngaySo}.js`;
-	// const url = `https://www.minhngoc.com.vn/getkqxs/${daiSlug}/${ngaySo}.js`;
-
+	const url = `https://xosodacbiet.com/xsmn/xs${dai.kihieu}/ngay-${ngay}`;
 	console.log(url);
 	await request.get(url, (err, response, body) => {
 		if (err) {
 			console.log(err);
 		} else {
 			const $ = cheerio.load(body);
-			dai = $(body).find("div.title").text().trim().slice(5, -11);
-			const ngaytho = $(body)
-				.find("div.title")
-				.text()
-				.trim()
-				.slice(-10)
-				.split("/");
-			const ngay = new Date(ngaytho[2], ngaytho[1] - 1, ngaytho[0]);
-			const loaive = $(body).find("td.ngay").text().trim().slice(9);
-			const giaidb = $(body).find("td.giaidb").text().trim().split(" - ");
-			const giai1 = $(body).find("td.giai1").text().trim().split(" - ");
-			const giai2 = $(body).find("td.giai2").text().trim().split(" - ");
-			const giai3 = $(body).find("td.giai3").text().trim().split(" - ");
-			const giai4 = $(body).find("td.giai4").text().trim().split(" - ");
-			const giai5 = $(body).find("td.giai5").text().trim().split(" - ");
-			const giai6 = $(body).find("td.giai6").text().trim().split(" - ");
-			const giai7 = $(body).find("td.giai7").text().trim().split(" - ");
-			const giai8 = $(body).find("td.giai8").text().trim().split(" - ");
+			const giaidb = $(body).find(".v-gdb ").text().trim();
+			const giai1 = $(body).find(".v-g1").text().trim();
+			const giai2 = $(body).find(".v-g2").text().trim();
+			const giai30 = $(body).find(".v-g3-0").text().trim();
+			const giai31 = $(body).find(".v-g3-1").text().trim();
+			const giai40 = $(body).find(".v-g4-0").text().trim();
+			const giai41 = $(body).find(".v-g4-1").text().trim();
+			const giai42 = $(body).find(".v-g4-2").text().trim();
+			const giai43 = $(body).find(".v-g4-3").text().trim();
+			const giai44 = $(body).find(".v-g4-4").text().trim();
+			const giai45 = $(body).find(".v-g4-5").text().trim();
+			const giai46 = $(body).find(".v-g4-6").text().trim();
+			const giai5 = $(body).find(".v-g5").text().trim();
+			const giai60 = $(body).find(".v-g6-0").text().trim();
+			const giai61 = $(body).find(".v-g6-1").text().trim();
+			const giai62 = $(body).find(".v-g6-2").text().trim();
+			const giai7 = $(body).find(".v-g7").text().trim();
+			const giai8 = $(body).find(".v-g8").text().trim();
 			const ketqua = [
-				giai8,
-				giai7,
-				giai6,
-				giai5,
-				giai4,
-				giai3,
-				giai2,
-				giai1,
-				giaidb,
+				[giaidb],
+				[giai1],
+				[giai2],
+				[giai30, giai31],
+				[giai40, giai41, giai42, giai43, giai44, giai45, giai46],
+				[giai5],
+				[giai60, giai61, giai62],
+				[giai7],
+				[giai8],
 			];
-			result = { ngay, loaive, ketqua };
+			// console.log(ketqua);
+			result = { ketqua };
 		}
 	});
+
+	result = {
+		...result,
+		dai: dai._id,
+		ngay: new Date(formatDate.dayMonth(ngay)),
+	};
 	console.log(result);
-	const daiId = await dais.findOne({ ten: dai });
-	if (!daiId) return null;
-	result = { ...result, dai: daiId._id };
 	return result;
 };
 

@@ -7,6 +7,7 @@ const mien = require("./mien.model");
 const DaiSchema = new Schema({
 	ten: { type: "String", required: true },
 	slug: { type: "String", slug: "ten", unique: true },
+	kihieu: { type: "String", unique: true },
 	mien: { type: "String", required: true, ref: mien },
 });
 

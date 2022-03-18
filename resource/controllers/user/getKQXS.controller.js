@@ -349,12 +349,13 @@ const getKQXS = {
 		res.send("ok");
 	},
 
-	daiMN: async (req, res) => {
+	dai: async (req, res) => {
 		const { slug } = req.params;
 		try {
 			const dai = await daiModel.findOne({ slug });
 			const ketquas = await ketquaModel
 				.find({ dai: dai._id })
+				.populate("dai")
 				.sort("-ngay")
 				.limit(3);
 			res.status(200).json({

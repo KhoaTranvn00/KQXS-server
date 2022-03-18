@@ -8,12 +8,10 @@ const formatterDate = require("../../utils/formatDate");
 const setKQXS = {
 	setMN: async (req, res) => {
 		const { ngay } = req.params;
-		console.log(ngay);
 		const dais = await daiTheoNgay(formatterDate.dayMonth(ngay), "mn");
-		console.log(dais);
 		let result = [];
 		for (const dai of dais) {
-			const ketquamoi = await crawlDataMN(dai.slug, ngay);
+			const ketquamoi = await crawlDataMN(dai, ngay);
 			result.push(ketquamoi);
 		}
 		try {
@@ -37,12 +35,10 @@ const setKQXS = {
 
 	setMT: async (req, res) => {
 		const { ngay } = req.params;
-		console.log(ngay);
 		const dais = await daiTheoNgay(formatterDate.dayMonth(ngay), "mt");
-		console.log(dais);
 		let result = [];
 		for (const dai of dais) {
-			const ketquamoi = await crawlDataMT(dai.slug, ngay);
+			const ketquamoi = await crawlDataMT(dai, ngay);
 			result.push(ketquamoi);
 		}
 		try {
@@ -59,18 +55,17 @@ const setKQXS = {
 			res.status(400).json({
 				success: false,
 				message: "Thêm KQXS thất bại",
+				error: error.message,
 			});
 		}
 	},
 
 	setMB: async (req, res) => {
 		const { ngay } = req.params;
-		console.log(ngay);
 		const dais = await daiTheoNgay(formatterDate.dayMonth(ngay), "mb");
-		console.log(dais);
 		let result = [];
 		for (const dai of dais) {
-			const ketquamoi = await crawlDataMB(dai.slug, ngay);
+			const ketquamoi = await crawlDataMB(dai, ngay);
 			result.push(ketquamoi);
 		}
 		try {

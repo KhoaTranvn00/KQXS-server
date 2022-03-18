@@ -10,7 +10,7 @@ route.get("/mien-nam/thu/:slug", controller.thuMN);
 route.get("/mien-trung/thu/:slug", controller.thuMT);
 route.get("/mien-bac/thu/:slug", controller.thuMB);
 
-route.get("/:slug", controller.daiMN);
+route.get("/:slug", controller.dai);
 
 route.get("/", controller.getToday);
 
