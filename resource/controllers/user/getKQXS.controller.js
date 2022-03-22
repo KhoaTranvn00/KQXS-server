@@ -151,27 +151,20 @@ const getKQXS = {
 	},
 
 	thuMN: async (req, res) => {
+		// slug: slug thứ
 		const { slug } = req.params;
 		try {
 			const thu = await thuModel.findOne({ slug: slug }).populate("dai.mn");
 			const dais = thu.dai.mn;
-
-			let ngay = new Date();
-			while (ngay.getDay() !== thu._id) {
-				ngay.setDate(ngay.getDate() - 1);
-			}
 
 			const kq1 = [];
 			const kq2 = [];
 			const kq3 = [];
 			for (const dai of dais) {
 				try {
-					let preNgay = new Date();
-					preNgay.setDate(ngay.getDate() - 1);
 					const query = {
 						dai: dai._id,
 					};
-					console.log(query);
 					const ketquadai = await ketquaModel
 						.find(query)
 						.populate("dai")
@@ -193,17 +186,14 @@ const getKQXS = {
 					});
 				}
 			}
-			const ngay1 = new Date();
-			const ngay2 = new Date();
 			const kqs = [
-				{ ngay: ngay, ketquas: kq1 },
-				{ ngay: new Date(ngay1.setDate(ngay.getDate() - 7)), ketquas: kq2 },
-				{ ngay: new Date(ngay2.setDate(ngay.getDate() - 14)), ketquas: kq3 },
+				{ ngay: kq1[0].ngay, ketqua: kq1 },
+				{ ngay: kq2[0].ngay, ketqua: kq2 },
+				{ ngay: kq3[0].ngay, ketqua: kq3 },
 			];
 			res.status(200).json({
 				success: true,
 				message: "Lấy KQXS thành công",
-				ngay,
 				thu: thu.thu,
 				kqs,
 			});
@@ -214,7 +204,6 @@ const getKQXS = {
 				error: error,
 			});
 		}
-		res.send("ok");
 	},
 	thuMT: async (req, res) => {
 		const { slug } = req.params;
@@ -222,18 +211,11 @@ const getKQXS = {
 			const thu = await thuModel.findOne({ slug: slug }).populate("dai.mt");
 			const dais = thu.dai.mt;
 
-			let ngay = new Date();
-			while (ngay.getDay() !== thu._id) {
-				ngay.setDate(ngay.getDate() - 1);
-			}
-
 			const kq1 = [];
 			const kq2 = [];
 			const kq3 = [];
 			for (const dai of dais) {
 				try {
-					let preNgay = new Date();
-					preNgay.setDate(ngay.getDate() - 1);
 					const query = {
 						dai: dai._id,
 					};
@@ -262,14 +244,13 @@ const getKQXS = {
 			const ngay1 = new Date();
 			const ngay2 = new Date();
 			const kqs = [
-				{ ngay: ngay, ketquas: kq1 },
-				{ ngay: new Date(ngay1.setDate(ngay.getDate() - 7)), ketquas: kq2 },
-				{ ngay: new Date(ngay2.setDate(ngay.getDate() - 14)), ketquas: kq3 },
+				{ ngay: kq1[0].ngay, ketqua: kq1 },
+				{ ngay: kq2[0].ngay, ketqua: kq2 },
+				{ ngay: kq3[0].ngay, ketqua: kq3 },
 			];
 			res.status(200).json({
 				success: true,
 				message: "Lấy KQXS thành công",
-				ngay,
 				thu: thu.thu,
 				kqs,
 			});
@@ -365,6 +346,33 @@ const getKQXS = {
 			});
 		} catch (error) {
 			res.status(400).json({ success: false, message: error.message });
+		}
+	},
+
+	daiNgay: async (req, res) => {
+		const { slug, ngay } = req.params;
+		try {
+			const dai = await daiModel.findOne({ slug });
+			const ketqua = await ketquaModel.findOne({
+				dai: dai._id,
+				ngay: new Date(formatDate.dayMonth(ngay)),
+			});
+			res.status(200).json({
+				success: true,
+				message: "Lấy kq đài theo ngày thành công",
+				kq: {
+					ketqua: ketqua.ketqua,
+					dai,
+					ngay: new Date(formatDate.dayMonth(ngay)),
+				},
+			});
+		} catch (error) {
+			console.log(error);
+			res.status(400).json({
+				success: false,
+				message: "Kết quả không tìm thấy",
+				error: error.message,
+			});
 		}
 	},
 

@@ -11,6 +11,7 @@ route.get("/mien-trung/thu/:slug", controller.thuMT);
 route.get("/mien-bac/thu/:slug", controller.thuMB);
 
 route.get("/:slug", controller.dai);
+route.get("/:slug/:ngay", controller.daiNgay);
 
 route.get("/", controller.getToday);
 
