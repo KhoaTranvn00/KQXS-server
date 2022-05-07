@@ -11,5 +11,6 @@ route.get("/getlayout", controller.getLayout);
 route.post("/do-kq", controller.doKQ);
 route.post("/mua-ve-so", middleware.verifyToken, controller.muaVeSo);
 route.get("/ve-da-mua", middleware.verifyToken, controller.veDaMua);
+route.get("/thong-bao", middleware.verifyToken, controller.thongBao);
 
 module.exports = route;
