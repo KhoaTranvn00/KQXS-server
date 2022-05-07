@@ -10,6 +10,7 @@ const getKQXS = {
 		if (!ngay) {
 			ngay = new Date();
 		} else ngay = new Date(formatDate.dayMonth(ngay));
+		console.log(ngay);
 		let ketquas = [];
 		try {
 			const thu = await thuModel

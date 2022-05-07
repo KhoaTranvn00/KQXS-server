@@ -13,8 +13,10 @@
 	"dependencies": {
 		"cheerio": "^1.0.0-rc.10",
 		"cors": "^2.8.5",
-		"dotenv": "^14.2.0",
+		"dotenv": "^14.3.2",
 		"express": "^4.17.2",
+		"json-web-token": "^3.2.0",
+		"jsonwebtoken": "^8.5.1",
 		"method-override": "^3.0.0",
 		"mongoose": "^6.1.7",
 		"mongoose-slug-updater": "^3.3.0",

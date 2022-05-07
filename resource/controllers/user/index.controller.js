@@ -2,6 +2,7 @@ const mienModel = require("../../models/mien.model");
 const daiModel = require("../../models/dai.model");
 const thuModel = require("../../models/thu.model");
 const ketquaModel = require("../../models/ketqua.model");
+const veMuaModel = require("../../models/vemua.model");
 const formatDate = require("../../utils/formatDate");
 
 // return lại giải trung: 0-8 nếu ko trúng return -1
@@ -81,6 +82,47 @@ const index = {
 			res
 				.status(400)
 				.json({ success: false, message: "Kết quả không tìm tháy" });
+		}
+	},
+
+	muaVeSo: async (req, res) => {
+		const { ngay, dai, veso, soLuong } = req.body;
+		console.log({ ngay: new Date(formatDate.ymdTmdy(ngay)) });
+		console.log(req.body);
+		const { value: daiId, label: daiTen } = dai;
+		const ngayQ = new Date(formatDate.ymdTmdy(ngay));
+		try {
+			const veMua = await veMuaModel.create({
+				...req.body,
+				ngay: new Date(formatDate.ymdTmdy(ngay)),
+				daiId,
+				userId: req.userId,
+			});
+			if (veMua) {
+				res.status(200).json({
+					success: true,
+					message: "Mua vé số thành công, Chúc bạn may mắn",
+				});
+			}
+		} catch (error) {
+			console.log(error);
+			res.status(400).json({ success: false, message: "Mua vé số thất bại" });
+		}
+	},
+
+	veDaMua: async (req, res) => {
+		try {
+			const veDaMuas = await veMuaModel
+				.find({ userId: req.userId })
+				.populate("daiId");
+			if (veDaMuas) {
+				res.status(200).json({ success: true, veDaMuas });
+			}
+		} catch (error) {
+			console.log(error);
+			res
+				.status(400)
+				.json({ success: false, message: "Lay ve da mua ko thanh cong" });
 		}
 	},
 };
