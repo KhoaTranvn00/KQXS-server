@@ -112,9 +112,40 @@ const index = {
 	},
 
 	veDaMua: async (req, res) => {
+		const params = req.query;
+		const { tg, status } = params;
+		let filter = {};
+		if (status) {
+			filter = { status };
+		}
+		if (tg) {
+			let ngay;
+			switch (tg) {
+				case "today":
+					ngay = new Date();
+					ngay.setHours(0, 0, 0, 0);
+
+					break;
+				case "3dago":
+					ngay = new Date();
+					ngay.setDate(ngay.getDate() - 3);
+					ngay.setHours(0, 0, 0, 0);
+					break;
+
+				case "month":
+					ngay = new Date();
+					ngay.setMonth(ngay.getMonth() - 1);
+					ngay.setHours(0, 0, 0, 0);
+					break;
+				default:
+					break;
+			}
+			filter = { ...filter, ngay: { $gte: ngay } };
+		}
+		console.log(filter);
 		try {
 			const veDaMuas = await veMuaModel
-				.find({ userId: req.userId })
+				.find({ userId: req.userId, ...filter })
 				.populate("daiId");
 			if (veDaMuas) {
 				res.status(200).json({ success: true, veDaMuas });
@@ -135,7 +166,8 @@ const index = {
 				.populate({
 					path: "veMuaId",
 					populate: { path: "daiId" },
-				});
+				})
+				.sort({ createdAt: -1 });
 			if (thongbaos) {
 				res.status(200).json({ success: true, thongbaos });
 			}
