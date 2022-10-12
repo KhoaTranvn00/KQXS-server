@@ -62,7 +62,7 @@ const index = {
 			let message = "";
 			switch (kq) {
 				case -1:
-					message = `Tiếc quá vé số ${veso} của bạn không trúng  KQXS đài ${daiTen} xổ ngày: ${formatDate.ymdTdmy(
+					message = `Tiếc quá vé số ${veso} của bạn không trúng KQXS đài ${daiTen} xổ ngày: ${formatDate.ymdTdmy(
 						ngay
 					)} rùi`;
 					break;

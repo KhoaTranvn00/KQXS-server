@@ -35,7 +35,7 @@ const auth = {
 
 			// JWT
 			const accessToken = jwt.sign(
-				{ userId: newUser._id, role: user.role },
+				{ userId: newUser._id, role: newUser.role },
 				process.env.ACCESS_TOKEN_SECRET
 			);
 			return res.status(200).json({
@@ -61,7 +61,6 @@ const auth = {
 				.status(400)
 				.json({ success: false, message: "Mật khẩu không chính xác" });
 		}
-
 		// JWT
 		const accessToken = jwt.sign(
 			{ userId: user._id, role: user.role },
