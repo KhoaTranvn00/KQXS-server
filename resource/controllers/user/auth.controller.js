@@ -20,6 +20,7 @@ const auth = {
 				.json({ success: false, message: "Server error auth controller" });
 		}
 	},
+
 	register: async (req, res) => {
 		const { username, password } = req.body;
 		try {
@@ -34,7 +35,7 @@ const auth = {
 
 			// JWT
 			const accessToken = jwt.sign(
-				{ userId: newUser._id },
+				{ userId: newUser._id, role: user.role },
 				process.env.ACCESS_TOKEN_SECRET
 			);
 			return res.status(200).json({
@@ -63,7 +64,7 @@ const auth = {
 
 		// JWT
 		const accessToken = jwt.sign(
-			{ userId: user._id },
+			{ userId: user._id, role: user.role },
 			process.env.ACCESS_TOKEN_SECRET
 		);
 		return res.status(200).json({

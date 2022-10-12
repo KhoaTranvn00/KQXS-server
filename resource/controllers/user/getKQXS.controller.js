@@ -262,7 +262,7 @@ const getKQXS = {
 				error: error,
 			});
 		}
-		res.send("ok");
+		// res.send("ok");
 	},
 	thuMB: async (req, res) => {
 		const { slug } = req.params;
@@ -328,7 +328,7 @@ const getKQXS = {
 				error: error,
 			});
 		}
-		res.send("ok");
+		// res.send("ok");
 	},
 
 	dai: async (req, res) => {
