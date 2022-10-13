@@ -29,6 +29,24 @@ const utils = {
 		}
 		// res.send(ngay);
 	},
+	getDaiTheoNgayMien: async (req, res) => {
+		const { ngay, mien } = req.params;
+		const ngayThu = new Date(formatDate.dayMonth(ngay));
+		const thuQ = ngayThu.getDay();
+		const populate = `dai.${mien}`;
+		try {
+			const thu = await thuModel.findById(thuQ).populate(populate);
+			let daiOption = [];
+			thu.dai.mn.forEach((dai) => {
+				daiOption.push({ value: dai._id, label: dai.ten });
+			});
+			res.status(200).json({ success: true, daiOption });
+		} catch (error) {
+			console.log(error);
+			res.status(400).json({ success: false, message: error.message });
+		}
+		// res.send(ngay);
+	},
 };
 
 module.exports = utils;
