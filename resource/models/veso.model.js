@@ -16,6 +16,11 @@ const VesoSchema = new Schema({
 	thuId: { type: "Number", ref: thuModel },
 	kihieu: { type: "String", required: true },
 	soluong: { type: "Number", required: true },
+	// 0 - chua do
+	// 1 - ko trung
+	// 2 - trung
+	status: { type: "Number", default: 0, min: 0, max: 2 },
+	sold: { type: "Number", default: 0 },
 });
 
 module.exports = mongoose.model("veso", VesoSchema);

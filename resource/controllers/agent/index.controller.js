@@ -19,8 +19,17 @@ const agent = {
 		});
 	},
 
-	upLottery: async (req, res) => {
-		const { bonSoDau, caySo, daiId, ngay, thuId, kihieu, soluong } = req.body;
+	upLotterySeri: async (req, res) => {
+		const {
+			bonSoDau,
+			caySo,
+			dai: { value: daiId },
+			ngay,
+			kihieu,
+			soluong,
+		} = req.body;
+		const thuId = new Date(ngay).getDay();
+		// TODO verify kihieu
 		try {
 			for (i = 0; i <= 9; i++) {
 				const veso = `${bonSoDau}${i}${Math.abs(10 + (caySo - i)) % 10}`;
@@ -38,11 +47,52 @@ const agent = {
 			}
 			return res
 				.status(200)
+				.json({ success: true, message: "Đăng vé số thành công" });
+		} catch (error) {
+			console.log(error);
+			res.status(500).json({ success: false, message: error.message });
+		}
+	},
+
+	upLotteryRetail: async (req, res) => {
+		const {
+			veso,
+			dai: { value: daiId },
+			ngay,
+			kihieu,
+			soluong,
+		} = req.body;
+		const thuId = new Date(ngay).getDay();
+		// TODO verify kihieu
+		try {
+			const vesoNew = new vesoModel({
+				agentId: req.userId,
+				veso,
+				daiId,
+				ngay,
+				thuId,
+				kihieu,
+				soluong,
+			});
+			console.log(vesoNew);
+			await vesoNew.save();
+			return res
+				.status(200)
 				.json({ success: true, message: "Thêm vé số thành công" });
 		} catch (error) {
 			console.log(error);
 			res.status(500).json({ success: false, message: error.message });
 		}
+	},
+
+	getPostedLottery: async (req, res) => {
+		const vesos = await vesoModel
+			.find({ agentId: req.userId })
+			.populate("daiId")
+			.populate("thuId");
+		return res
+			.status(200)
+			.json({ success: true, message: "Lấy vé số đã đăng thành công", vesos });
 	},
 };
 
