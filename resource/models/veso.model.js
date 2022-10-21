@@ -21,6 +21,7 @@ const VesoSchema = new Schema({
 	// 2 - trung
 	status: { type: "Number", default: 0, min: 0, max: 2 },
 	sold: { type: "Number", default: 0 },
+	createdAt: { type: "Date", required: true, default: Date.now },
 });
 
 module.exports = mongoose.model("veso", VesoSchema);

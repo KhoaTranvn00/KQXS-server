@@ -21,8 +21,7 @@ const agent = {
 
 	upLotterySeri: async (req, res) => {
 		const {
-			bonSoDau,
-			caySo,
+			namSoSau,
 			dai: { value: daiId },
 			ngay,
 			kihieu,
@@ -32,7 +31,8 @@ const agent = {
 		// TODO verify kihieu
 		try {
 			for (i = 0; i <= 9; i++) {
-				const veso = `${bonSoDau}${i}${Math.abs(10 + (caySo - i)) % 10}`;
+				// const veso = `${bonSoDau}${i}${Math.abs(10 + (caySo - i)) % 10}`;
+				const veso = `${i}${namSoSau}`;
 				const vesoNew = new vesoModel({
 					agentId: req.userId,
 					veso,
@@ -40,10 +40,10 @@ const agent = {
 					ngay,
 					thuId,
 					kihieu,
-					soluong,
+					soluong: 10,
 				});
 				console.log(veso);
-				// await vesoNew.save();
+				await vesoNew.save();
 			}
 			return res
 				.status(200)
@@ -86,13 +86,33 @@ const agent = {
 	},
 
 	getPostedLottery: async (req, res) => {
-		const vesos = await vesoModel
-			.find({ agentId: req.userId })
-			.populate("daiId")
-			.populate("thuId");
-		return res
-			.status(200)
-			.json({ success: true, message: "Lấy vé số đã đăng thành công", vesos });
+		const { page } = req.params;
+		const itemsPerPage = 10;
+		const totalItem = await vesoModel.find({ agentId: req.userId }).count();
+		const totalPage = Math.ceil(totalItem / itemsPerPage);
+
+		if (page > totalPage) {
+			return res
+				.status(400)
+				.json({ success: false, message: "Trang không có kết quả" });
+		} else {
+			const pagination = {
+				currentPage: page,
+				itemsPerPage,
+				totalItem,
+				totalPage,
+			};
+			const vesos = await vesoModel
+				.find({ agentId: req.userId })
+				.populate("daiId")
+				.populate("thuId");
+			return res.status(200).json({
+				success: true,
+				message: "Lấy vé số đã đăng thành công",
+				vesos,
+				pagination,
+			});
+		}
 	},
 };
 
