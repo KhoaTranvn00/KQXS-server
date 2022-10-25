@@ -5,6 +5,7 @@ const ketquaModel = require("../../models/ketqua.model");
 const veMuaModel = require("../../models/vemua.model");
 const formatDate = require("../../utils/formatDate");
 const thongbaoModel = require("../../models/thongbao.model");
+const vesoModel = require("../../models/veso.model");
 
 // return lại giải trung: 0-8 nếu ko trúng return -1
 const doXoSo = (veso, ketqua) => {
@@ -177,6 +178,31 @@ const index = {
 				.status(400)
 				.json({ success: false, message: "lay thong bao khong thanh cong" });
 		}
+	},
+
+	getVeSoDeMua: async (req, res) => {
+		const { dai, ngay, veso } = req.body;
+		const condition = {};
+		if (dai) {
+			condition.daiId = dai.value;
+		}
+		if (ngay) {
+			condition.ngay = ngay;
+		}
+		if (veso) {
+			condition.veso = veso;
+		}
+		let vesos;
+		vesos = await vesoModel
+			.find({ ...condition })
+			.populate("daiId")
+			.populate("thuId");
+		// if (dai || ngay || veso) {
+		// } else {
+		// 	vesos = await vesoModel.find({});
+		// }
+		console.log(vesos);
+		res.status(200).json({ success: true, vesos });
 	},
 };
 
