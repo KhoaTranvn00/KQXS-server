@@ -86,10 +86,26 @@ const agent = {
 	},
 
 	getPostedLottery: async (req, res) => {
-		const { page } = req.params;
+		let { page, daiId, veso, ngay, createdAt } = req.query;
 		const itemsPerPage = 10;
 		const totalItem = await vesoModel.find({ agentId: req.userId }).count();
 		const totalPage = Math.ceil(totalItem / itemsPerPage);
+		if (!page) {
+			page = 1;
+		}
+		const condition = {};
+		if (daiId) {
+			condition.daiId = daiId;
+		}
+		if (veso) {
+			condition.veso = veso;
+		}
+		if (ngay) {
+			condition.ngay = ngay;
+		}
+		if (createdAt) {
+			condition.createdAt = createdAt;
+		}
 
 		if (page > totalPage) {
 			return res
@@ -103,7 +119,9 @@ const agent = {
 				totalPage,
 			};
 			const vesos = await vesoModel
-				.find({ agentId: req.userId })
+				.find({ agentId: req.userId, ...condition })
+				.skip((page - 1) * itemsPerPage)
+				.limit(itemsPerPage)
 				.populate("daiId")
 				.populate("thuId");
 			return res.status(200).json({
