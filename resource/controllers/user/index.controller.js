@@ -6,6 +6,7 @@ const veMuaModel = require("../../models/vemua.model");
 const formatDate = require("../../utils/formatDate");
 const thongbaoModel = require("../../models/thongbao.model");
 const vesoModel = require("../../models/veso.model");
+const dateUtils = require("../../utils/dateUtils");
 
 // return lại giải trung: 0-8 nếu ko trúng return -1
 const doXoSo = (veso, ketqua) => {
@@ -181,28 +182,63 @@ const index = {
 	},
 
 	getVeSoDeMua: async (req, res) => {
-		const { dai, ngay, veso } = req.body;
-		const condition = {};
-		if (dai) {
-			condition.daiId = dai.value;
+		let { page, daiId, veso, ngay, createdAt, tg, status } = req.query;
+		const itemsPerPage = 30;
+
+		if (!page) {
+			page = 1;
 		}
-		if (ngay) {
-			condition.ngay = ngay;
+		const condition = {};
+		if (dateUtils.verifyToday()) {
+			condition.ngay = { $gte: dateUtils.getToday() };
+		} else {
+			condition.ngay = { $gte: dateUtils.getTomorrow() };
+		}
+
+		if (status) {
+			condition.status = status;
+		}
+		if (daiId) {
+			condition.daiId = daiId;
 		}
 		if (veso) {
 			condition.veso = veso;
 		}
-		let vesos;
-		vesos = await vesoModel
-			.find({ ...condition })
-			.populate("daiId")
-			.populate("thuId");
-		// if (dai || ngay || veso) {
-		// } else {
-		// 	vesos = await vesoModel.find({});
-		// }
-		console.log(vesos);
-		res.status(200).json({ success: true, vesos });
+		if (ngay) {
+			condition.ngay = ngay;
+		}
+		if (createdAt) {
+			condition.createdAt = createdAt;
+		}
+
+		const totalItem = await vesoModel.find({ ...condition }).count();
+		const totalPage = Math.ceil(totalItem / itemsPerPage);
+
+		if (page > totalPage) {
+			return res
+				.status(200)
+				.json({ success: false, message: "Trang không có kết quả" });
+		} else {
+			const pagination = {
+				currentPage: page,
+				itemsPerPage,
+				totalItem,
+				totalPage,
+			};
+			const vesos = await vesoModel
+				.find({ ...condition })
+				.sort({ ngay: "desc" })
+				.skip((page - 1) * itemsPerPage)
+				.limit(itemsPerPage)
+				.populate("daiId")
+				.populate("thuId");
+			return res.status(200).json({
+				success: true,
+				message: "Lấy vé số đã đăng thành công",
+				vesos,
+				pagination,
+			});
+		}
 	},
 };
 

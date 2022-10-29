@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const filterData = require("../../utils/filterData");
 const userModel = require("../../models/user.model");
 const vesoModel = require("../../models/veso.model");
 
@@ -86,14 +87,19 @@ const agent = {
 	},
 
 	getPostedLottery: async (req, res) => {
-		let { page, daiId, veso, ngay, createdAt } = req.query;
-		const itemsPerPage = 10;
-		const totalItem = await vesoModel.find({ agentId: req.userId }).count();
-		const totalPage = Math.ceil(totalItem / itemsPerPage);
+		let { page, daiId, veso, ngay, createdAt, tg, status } = req.query;
+		const itemsPerPage = 30;
+
 		if (!page) {
 			page = 1;
 		}
 		const condition = {};
+		if (tg) {
+			condition.ngay = filterData.getFilterTG(tg);
+		}
+		if (status) {
+			condition.status = status;
+		}
 		if (daiId) {
 			condition.daiId = daiId;
 		}
@@ -107,9 +113,14 @@ const agent = {
 			condition.createdAt = createdAt;
 		}
 
+		const totalItem = await vesoModel
+			.find({ agentId: req.userId, ...condition })
+			.count();
+		const totalPage = Math.ceil(totalItem / itemsPerPage);
+
 		if (page > totalPage) {
 			return res
-				.status(400)
+				.status(200)
 				.json({ success: false, message: "Trang không có kết quả" });
 		} else {
 			const pagination = {
@@ -120,6 +131,7 @@ const agent = {
 			};
 			const vesos = await vesoModel
 				.find({ agentId: req.userId, ...condition })
+				.sort({ ngay: "desc" })
 				.skip((page - 1) * itemsPerPage)
 				.limit(itemsPerPage)
 				.populate("daiId")
