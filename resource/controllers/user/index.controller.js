@@ -7,6 +7,7 @@ const formatDate = require("../../utils/formatDate");
 const thongbaoModel = require("../../models/thongbao.model");
 const vesoModel = require("../../models/veso.model");
 const dateUtils = require("../../utils/dateUtils");
+const vemuaModel = require("../../models/vemua.model");
 
 // return lại giải trung: 0-8 nếu ko trúng return -1
 const doXoSo = (veso, ketqua) => {
@@ -89,28 +90,55 @@ const index = {
 	},
 
 	muaVeSo: async (req, res) => {
-		const { ngay, dai, veso, soLuong } = req.body;
-		console.log({ ngay: new Date(formatDate.ymdTmdy(ngay)) });
-		console.log(req.body);
-		const { value: daiId, label: daiTen } = dai;
-		const ngayQ = new Date(formatDate.ymdTmdy(ngay));
-		try {
-			const veMua = await veMuaModel.create({
-				...req.body,
-				ngay: new Date(formatDate.ymdTmdy(ngay)),
-				daiId,
-				userId: req.userId,
-			});
-			if (veMua) {
-				res.status(200).json({
-					success: true,
-					message: "Mua vé số thành công, Chúc bạn may mắn",
+		const { vemuas } = req.body;
+		vemuas.forEach(async (vemuaBody, index) => {
+			// console.log(vemuaBody);
+
+			// update soluong veso
+			const veso = await vesoModel.findById(vemuaBody._id);
+			if (veso.soluong >= vemuaBody.soVeMua) {
+				veso.sold = vemuaBody.soVeMua;
+				await veso.save();
+
+				const vemuaNew = new vemuaModel({
+					userId: req.userId,
+					vesoId: vemuaBody._id,
+					soluong: vemuaBody.soVeMua,
 				});
+				await vemuaNew.save();
+
+				res.status(200).json({ success: true });
+			} else {
+				// return res.status(400).json({
+				// 	success: false,
+				// 	message: "Vé số còn lại không đủ số lượng mua",
+				// });
 			}
-		} catch (error) {
-			console.log(error);
-			res.status(400).json({ success: false, message: "Mua vé số thất bại" });
-		}
+		});
+
+		// return res.status(200).json({ success: true });
+		// const { ngay, dai, veso, soLuong } = req.body;
+		// console.log({ ngay: new Date(formatDate.ymdTmdy(ngay)) });
+		// console.log(req.body);
+		// const { value: daiId, label: daiTen } = dai;
+		// const ngayQ = new Date(formatDate.ymdTmdy(ngay));
+		// try {
+		// 	const veMua = await veMuaModel.create({
+		// 		...req.body,
+		// 		ngay: new Date(formatDate.ymdTmdy(ngay)),
+		// 		daiId,
+		// 		userId: req.userId,
+		// 	});
+		// 	if (veMua) {
+		// 		res.status(200).json({
+		// 			success: true,
+		// 			message: "Mua vé số thành công, Chúc bạn may mắn",
+		// 		});
+		// 	}
+		// } catch (error) {
+		// 	console.log(error);
+		// 	res.status(400).json({ success: false, message: "Mua vé số thất bại" });
+		// }
 	},
 
 	veDaMua: async (req, res) => {
@@ -189,6 +217,9 @@ const index = {
 			page = 1;
 		}
 		const condition = {};
+		// condition.soluong = {
+		// 	$gt: "$sold",
+		// };
 		if (dateUtils.verifyToday()) {
 			condition.ngay = { $gte: dateUtils.getToday() };
 		} else {
@@ -211,7 +242,9 @@ const index = {
 			condition.createdAt = createdAt;
 		}
 
-		const totalItem = await vesoModel.find({ ...condition }).count();
+		const totalItem = await vesoModel
+			.find({ ...condition, $expr: { $gt: ["$soluong", "$sold"] } })
+			.count();
 		const totalPage = Math.ceil(totalItem / itemsPerPage);
 
 		if (page > totalPage) {
@@ -226,7 +259,8 @@ const index = {
 				totalPage,
 			};
 			const vesos = await vesoModel
-				.find({ ...condition })
+				.find({ ...condition, $expr: { $gt: ["$soluong", "$sold"] } })
+				// .$where("this.sold > this.soluong")
 				.sort({ ngay: "desc" })
 				.skip((page - 1) * itemsPerPage)
 				.limit(itemsPerPage)

@@ -55,7 +55,7 @@ const utils = {
 			console.log(error);
 			res.status(400).json({ success: false, message: error.message });
 		}
-		res.send(ngay);
+		// res.send(ngay);
 	},
 
 	getDaiMienNamTheoNgay: async (req, res) => {
