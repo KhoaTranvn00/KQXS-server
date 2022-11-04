@@ -274,6 +274,62 @@ const index = {
 			});
 		}
 	},
+
+	getVeSoDaMua: async (req, res) => {
+		let { page, daiId, veso, ngay, createdAt, tg, status } = req.query;
+		const itemsPerPage = 30;
+
+		if (!page) {
+			page = 1;
+		}
+		const condition = {};
+
+		if (status) {
+			condition.vesoId.status = status;
+		}
+		if (daiId) {
+			condition.vesoId.daiId = daiId;
+		}
+		if (veso) {
+			condition.vesoId.veso = veso;
+		}
+		if (ngay) {
+			condition.vesoId.ngay = ngay;
+		}
+		if (createdAt) {
+			condition.vesoId.createdAt = createdAt;
+		}
+
+		const totalItem = await vesoModel.find({ ...condition }).count();
+		const totalPage = Math.ceil(totalItem / itemsPerPage);
+
+		if (page > totalPage) {
+			return res
+				.status(200)
+				.json({ success: false, message: "Trang không có kết quả" });
+		} else {
+			const pagination = {
+				currentPage: page,
+				itemsPerPage,
+				totalItem,
+				totalPage,
+			};
+			const vesos = await vesoModel
+				.find({ ...condition })
+				// .$where("this.sold > this.soluong")
+				.sort({ ngay: "desc" })
+				.skip((page - 1) * itemsPerPage)
+				.limit(itemsPerPage)
+				.populate("daiId")
+				.populate("thuId");
+			return res.status(200).json({
+				success: true,
+				message: "Lấy vé số đã đăng thành công",
+				vesos,
+				pagination,
+			});
+		}
+	},
 };
 
 module.exports = index;
