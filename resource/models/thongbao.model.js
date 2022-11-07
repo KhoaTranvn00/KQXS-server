@@ -8,8 +8,9 @@ const vemua = require("./vemua.model");
 const ThongBaoSchema = new Schema({
 	userId: { type: ObjectId, ref: user },
 	message: { type: "String", required: true },
-	veMuaId: { type: ObjectId, ref: vemua, unique: true },
+	veMuaId: { type: ObjectId, ref: vemua },
 	status: { type: "Boolean", required: true, default: false },
+	role: { type: "Number", default: 1, required: true, max: 2 },
 	createdAt: { type: "Date", required: true, default: Date.now },
 });
 

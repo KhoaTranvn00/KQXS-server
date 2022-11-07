@@ -4,6 +4,7 @@ const crawlDataMN = require("../../utils/crawlDataMN");
 const crawlDataMT = require("../../utils/crawlDataMT");
 const daiTheoNgay = require("../../utils/daiTheoNgay");
 const veMuaModel = require("../../models/vemua.model");
+const vesoModel = require("../../models/veso.model");
 const thongBaoModel = require("../../models/thongbao.model");
 const formatterDate = require("../../utils/formatDate");
 const formatDate = require("../../utils/formatDate");
@@ -32,29 +33,44 @@ const setKQXS = {
 			try {
 				const ketquamoi = await crawlDataMN(dai, ngay);
 				result.push(ketquamoi);
+
+				const preQuery = await vesoModel.find({
+					daiId: dai._id,
+					ngay: new Date(formatDate.dayMonth(ngay)),
+				});
+
+				const listId = preQuery.map((veso) => veso.id);
+
 				const veMuas = await veMuaModel
 					.find({
-						daiId: dai._id,
-						ngay: new Date(formatDate.dayMonth(ngay)),
+						vesoId: { $in: listId },
 					})
-					.populate("daiId");
+					.populate({
+						path: "vesoId",
+						populate: {
+							path: "daiId",
+						},
+					});
 				for (const veMua of veMuas) {
-					const trungGiai = doXoSo(veMua.veso, ketquamoi.ketqua);
+					const trungGiai = doXoSo(veMua.vesoId.veso, ketquamoi.ketqua);
 					console.log(trungGiai);
 					// trungGiai return lại giải trung: 0-8 nếu ko trúng return -1
 					if (trungGiai === -1) {
 						try {
 							const updateVeMua = await veMuaModel.findByIdAndUpdate(
-								veMua._id,
+								veMua.vesoId._id,
 								{ status: 1 },
 								{ new: true }
 							);
 							console.log(updateVeMua);
+
+							// Create thong bao only user
 							const thongBao = await thongBaoModel.create({
-								message: `Tiếc quá, vế số ${veMua.veso}. Đài ${veMua.daiId.ten} ngay ${ngay} KHÔNG TRÚNG GIẢI}`,
+								message: `Tiếc quá, vế số ${veMua.vesoId.veso}. Đài ${veMua.vesoId.daiId.ten} ngay ${ngay} KHÔNG TRÚNG GIẢI}`,
 								status: false,
-								veMuaId: veMua._id,
-								userId: veMua.userId,
+								role: 1,
+								veMuaId: veMua.vesoId._id,
+								userId: veMua.vesoId.userId,
 							});
 						} catch (error) {
 							console.log(error);
@@ -66,20 +82,20 @@ const setKQXS = {
 					} else {
 						try {
 							const updateVeMua = await veMuaModel.findByIdAndUpdate(
-								veMua._id,
+								veMua.vesoId._id,
 								{ status: 2 },
 								{ new: true }
 							);
 							console.log(updateVeMua);
 							const thongBao = await thongBaoModel.create({
-								message: `Chúc mừng, vế số ${veMua.veso}. Đài ${
-									veMua.daiId.ten
+								message: `Chúc mừng, vế số ${veMua.vesoId.veso}. Đài ${
+									veMua.vesoId.daiId.ten
 								} ngay ${ngay} TRÚNG GIẢI ${
 									trungGiai === 0 ? "ĐẶC BIỆT" : trungGiai
 								}`,
 								status: true,
-								veMuaId: veMua._id,
-								userId: veMua.userId,
+								veMuaId: veMua.vesoId._id,
+								userId: veMua.vesoId.userId,
 							});
 						} catch (error) {
 							console.log(error);

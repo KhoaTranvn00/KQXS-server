@@ -285,22 +285,28 @@ const index = {
 		const condition = {};
 
 		if (status) {
-			condition.vesoId.status = status;
+			condition.status = status;
 		}
 		if (daiId) {
-			condition.vesoId.daiId = daiId;
+			condition.daiId = daiId;
 		}
 		if (veso) {
-			condition.vesoId.veso = veso;
+			condition.veso = veso;
 		}
 		if (ngay) {
-			condition.vesoId.ngay = ngay;
+			condition.ngay = ngay;
 		}
 		if (createdAt) {
-			condition.vesoId.createdAt = createdAt;
+			condition.createdAt = createdAt;
 		}
 
-		const totalItem = await vesoModel.find({ ...condition }).count();
+		const preQuery = await vesoModel.find({ ...condition });
+
+		const listId = preQuery.map((veso) => veso.id);
+
+		const totalItem = await veMuaModel
+			.find({ uesrId: req.userId, vesoId: { $in: listId } })
+			.count();
 		const totalPage = Math.ceil(totalItem / itemsPerPage);
 
 		if (page > totalPage) {
@@ -314,14 +320,24 @@ const index = {
 				totalItem,
 				totalPage,
 			};
-			const vesos = await vesoModel
-				.find({ ...condition })
-				// .$where("this.sold > this.soluong")
+			const vesos = await veMuaModel
+				.find({ uesrId: req.userId, vesoId: { $in: listId } })
 				.sort({ ngay: "desc" })
 				.skip((page - 1) * itemsPerPage)
 				.limit(itemsPerPage)
-				.populate("daiId")
-				.populate("thuId");
+				.populate({
+					path: "vesoId",
+					populate: {
+						path: "daiId",
+					},
+				})
+				.populate({
+					path: "vesoId",
+					populate: {
+						path: "thuId",
+					},
+				});
+
 			return res.status(200).json({
 				success: true,
 				message: "Lấy vé số đã đăng thành công",
