@@ -106,39 +106,17 @@ const index = {
 					soluong: vemuaBody.soVeMua,
 				});
 				await vemuaNew.save();
-
-				res.status(200).json({ success: true });
 			} else {
-				// return res.status(400).json({
-				// 	success: false,
-				// 	message: "Vé số còn lại không đủ số lượng mua",
-				// });
+				return res.status(400).json({
+					success: false,
+					message: "Vé số còn lại không đủ số lượng mua",
+				});
 			}
 		});
-
-		// return res.status(200).json({ success: true });
-		// const { ngay, dai, veso, soLuong } = req.body;
-		// console.log({ ngay: new Date(formatDate.ymdTmdy(ngay)) });
-		// console.log(req.body);
-		// const { value: daiId, label: daiTen } = dai;
-		// const ngayQ = new Date(formatDate.ymdTmdy(ngay));
-		// try {
-		// 	const veMua = await veMuaModel.create({
-		// 		...req.body,
-		// 		ngay: new Date(formatDate.ymdTmdy(ngay)),
-		// 		daiId,
-		// 		userId: req.userId,
-		// 	});
-		// 	if (veMua) {
-		// 		res.status(200).json({
-		// 			success: true,
-		// 			message: "Mua vé số thành công, Chúc bạn may mắn",
-		// 		});
-		// 	}
-		// } catch (error) {
-		// 	console.log(error);
-		// 	res.status(400).json({ success: false, message: "Mua vé số thất bại" });
-		// }
+		res.status(200).json({
+			success: true,
+			message: "Mua vé số thành công, Chúc bạn may mắn",
+		});
 	},
 
 	veDaMua: async (req, res) => {

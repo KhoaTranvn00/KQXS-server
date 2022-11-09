@@ -36,7 +36,7 @@ const setKQXS = {
 
 				const preQuery = await vesoModel.find({
 					daiId: dai._id,
-					ngay: new Date(formatDate.dayMonth(ngay)),
+					ngay: new Date(formatDate.dayMonthZ(ngay)),
 				});
 
 				const listId = preQuery.map((veso) => veso.id);
@@ -57,7 +57,7 @@ const setKQXS = {
 					// trungGiai return lại giải trung: 0-8 nếu ko trúng return -1
 					if (trungGiai === -1) {
 						try {
-							const updateVeMua = await veMuaModel.findByIdAndUpdate(
+							const updateVeMua = await vesoModel.findByIdAndUpdate(
 								veMua.vesoId._id,
 								{ status: 1 },
 								{ new: true }
@@ -70,7 +70,7 @@ const setKQXS = {
 								status: false,
 								role: 1,
 								veMuaId: veMua.vesoId._id,
-								userId: veMua.vesoId.userId,
+								userId: veMua.userId,
 							});
 						} catch (error) {
 							console.log(error);
@@ -81,7 +81,7 @@ const setKQXS = {
 						}
 					} else {
 						try {
-							const updateVeMua = await veMuaModel.findByIdAndUpdate(
+							const updateVeMua = await vesoModel.findByIdAndUpdate(
 								veMua.vesoId._id,
 								{ status: 2 },
 								{ new: true }
@@ -93,9 +93,10 @@ const setKQXS = {
 								} ngay ${ngay} TRÚNG GIẢI ${
 									trungGiai === 0 ? "ĐẶC BIỆT" : trungGiai
 								}`,
-								status: true,
+								status: false,
+								role: 1,
 								veMuaId: veMua.vesoId._id,
-								userId: veMua.vesoId.userId,
+								userId: veMua.userId,
 							});
 						} catch (error) {
 							console.log(error);
@@ -111,14 +112,15 @@ const setKQXS = {
 			}
 		}
 		try {
-			const ketquamoi = await ketquaModel.create(result);
-			if (ketquamoi) {
-				return res.status(200).json({
-					success: true,
-					message: "Thêm KQXS thành công",
-					KQXS: ketquamoi,
-				});
-			}
+			// const ketquamoi = await ketquaModel.create(result);
+			// if (ketquamoi) {
+			// 	return res.status(200).json({
+			// 		success: true,
+			// 		message: "Thêm KQXS thành công",
+			// 		KQXS: ketquamoi,
+			// 	});
+			// }
+			return res.status(200);
 		} catch (error) {
 			console.log(error);
 			res.status(400).json({
