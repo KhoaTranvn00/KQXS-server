@@ -166,26 +166,26 @@ const index = {
 		}
 	},
 
-	thongBao: async (req, res) => {
-		try {
-			const thongbaos = await thongbaoModel
-				.find({ userId: req.userId })
-				.populate("veMuaId")
-				.populate({
-					path: "veMuaId",
-					populate: { path: "daiId" },
-				})
-				.sort({ createdAt: -1 });
-			if (thongbaos) {
-				res.status(200).json({ success: true, thongbaos });
-			}
-		} catch (error) {
-			console.log(error);
-			res
-				.status(400)
-				.json({ success: false, message: "lay thong bao khong thanh cong" });
-		}
-	},
+	// thongBao: async (req, res) => {
+	// 	try {
+	// 		const thongbaos = await thongbaoModel
+	// 			.find({ userId: req.userId })
+	// 			.populate("veMuaId")
+	// 			.populate({
+	// 				path: "veMuaId",
+	// 				populate: { path: "daiId" },
+	// 			})
+	// 			.sort({ createdAt: -1 });
+	// 		if (thongbaos) {
+	// 			res.status(200).json({ success: true, thongbaos });
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 		res
+	// 			.status(400)
+	// 			.json({ success: false, message: "lay thong bao khong thanh cong" });
+	// 	}
+	// },
 
 	getVeSoDeMua: async (req, res) => {
 		let { page, daiId, veso, ngay, createdAt, tg, status } = req.query;
@@ -320,6 +320,78 @@ const index = {
 				success: true,
 				message: "Lấy vé số đã đăng thành công",
 				vesos,
+				pagination,
+			});
+		}
+	},
+
+	getThongBao: async (req, res) => {
+		let { page, daiId, veso, ngay, createdAt, tg, status } = req.query;
+		const itemsPerPage = 30;
+
+		if (!page) {
+			page = 1;
+		}
+		const condition = {};
+
+		if (status) {
+			condition.status = status;
+		}
+		if (daiId) {
+			condition.daiId = daiId;
+		}
+		if (veso) {
+			condition.veso = veso;
+		}
+		if (ngay) {
+			condition.ngay = ngay;
+		}
+		if (createdAt) {
+			condition.createdAt = createdAt;
+		}
+
+		const preQuery = await vesoModel.find({ ...condition });
+
+		const listId = preQuery.map((veso) => veso.id);
+
+		const totalItem = await thongbaoModel
+			.find({ uesrId: req.userId, role: 1 })
+			.count();
+		const totalPage = Math.ceil(totalItem / itemsPerPage);
+
+		if (page > totalPage) {
+			return res
+				.status(200)
+				.json({ success: false, message: "Trang không có kết quả" });
+		} else {
+			const pagination = {
+				currentPage: page,
+				itemsPerPage,
+				totalItem,
+				totalPage,
+			};
+			const thongbaos = await thongbaoModel
+				.find({ uesrId: req.userId, role: 1 })
+				.sort({ createdAt: "desc" })
+				.skip((page - 1) * itemsPerPage)
+				.limit(itemsPerPage)
+				.populate({
+					path: "vesoId",
+					populate: {
+						path: "daiId",
+					},
+				})
+				.populate({
+					path: "vesoId",
+					populate: {
+						path: "thuId",
+					},
+				});
+
+			return res.status(200).json({
+				success: true,
+				message: "Lấy vé số đã đăng thành công",
+				vesos: thongbaos,
 				pagination,
 			});
 		}

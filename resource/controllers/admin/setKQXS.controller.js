@@ -66,7 +66,7 @@ const setKQXS = {
 
 							// Create thong bao only user
 							const thongBao = await thongBaoModel.create({
-								message: `Tiếc quá, vế số ${veMua.vesoId.veso}. Đài ${veMua.vesoId.daiId.ten} ngay ${ngay} KHÔNG TRÚNG GIẢI}`,
+								message: `Tiếc quá, vế số ${veMua.vesoId.veso}. Đài ${veMua.vesoId.daiId.ten} ngay ${ngay} KHÔNG TRÚNG GIẢI`,
 								status: false,
 								role: 1,
 								veMuaId: veMua.vesoId._id,
