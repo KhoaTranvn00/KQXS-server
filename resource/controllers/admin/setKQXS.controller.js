@@ -19,6 +19,10 @@ const doXoSo = (veso, ketqua) => {
 				result = giai;
 				break;
 			}
+			if (kq.length == 6 && veso.slice(-5) === kq.slice(-5)) {
+				result = 9;
+				break;
+			}
 		}
 	}
 	return result;
@@ -51,51 +55,60 @@ const setKQXS = {
 							path: "daiId",
 						},
 					});
+				for (const veso of preQuery) {
+					const trungGiai = doXoSo(veso.veso, ketquamoi.ketqua);
+					console.log(trungGiai);
+					// trungGiai return lại giải trung: 0-8 nếu ko trúng return -1
+					if (trungGiai === -1) {
+						const updateVeMua = await vesoModel.findByIdAndUpdate(
+							veso._id,
+							{ status: 1 },
+							{ new: true }
+						);
+					} else {
+						const updateVeMua = await vesoModel.findByIdAndUpdate(
+							veso._id,
+							{ status: 2 },
+							{ new: true }
+						);
+					}
+				}
 				for (const veMua of veMuas) {
 					const trungGiai = doXoSo(veMua.vesoId.veso, ketquamoi.ketqua);
 					console.log(trungGiai);
 					// trungGiai return lại giải trung: 0-8 nếu ko trúng return -1
 					if (trungGiai === -1) {
 						try {
-							const updateVeMua = await vesoModel.findByIdAndUpdate(
-								veMua.vesoId._id,
-								{ status: 1 },
-								{ new: true }
-							);
-							console.log(updateVeMua);
-
 							// Create thong bao only user
 							const thongBao = await thongBaoModel.create({
 								message: `Tiếc quá, vế số ${veMua.vesoId.veso}. Đài ${veMua.vesoId.daiId.ten} ngay ${ngay} KHÔNG TRÚNG GIẢI`,
 								status: false,
 								role: 1,
-								veMuaId: veMua.vesoId._id,
+								vesoId: veMua.vesoId._id,
 								userId: veMua.userId,
 							});
 						} catch (error) {
 							console.log(error);
 							res.status(400).json({
 								success: false,
-								message: "Update ve mua sau them ket qua that bai",
+								message: "Update thong bao sau them ket qua that bai",
 							});
 						}
 					} else {
 						try {
-							const updateVeMua = await vesoModel.findByIdAndUpdate(
-								veMua.vesoId._id,
-								{ status: 2 },
-								{ new: true }
-							);
-							console.log(updateVeMua);
 							const thongBao = await thongBaoModel.create({
 								message: `Chúc mừng, vế số ${veMua.vesoId.veso}. Đài ${
 									veMua.vesoId.daiId.ten
 								} ngay ${ngay} TRÚNG GIẢI ${
-									trungGiai === 0 ? "ĐẶC BIỆT" : trungGiai
+									trungGiai === 0
+										? "ĐẶC BIỆT"
+										: trungGiai === 9
+										? "KHUYẾN KHÍCH"
+										: trungGiai
 								}`,
 								status: false,
 								role: 1,
-								veMuaId: veMua.vesoId._id,
+								vesoId: veMua.vesoId._id,
 								userId: veMua.userId,
 							});
 						} catch (error) {
@@ -112,14 +125,14 @@ const setKQXS = {
 			}
 		}
 		try {
-			// const ketquamoi = await ketquaModel.create(result);
-			// if (ketquamoi) {
-			// 	return res.status(200).json({
-			// 		success: true,
-			// 		message: "Thêm KQXS thành công",
-			// 		KQXS: ketquamoi,
-			// 	});
-			// }
+			const ketquamoi = await ketquaModel.create(result);
+			if (ketquamoi) {
+				return res.status(200).json({
+					success: true,
+					message: "Thêm KQXS thành công",
+					KQXS: ketquamoi,
+				});
+			}
 			return res.status(200);
 		} catch (error) {
 			console.log(error);

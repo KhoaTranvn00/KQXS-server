@@ -113,9 +113,11 @@ const agent = {
 			condition.createdAt = createdAt;
 		}
 
-		const totalItem = await vesoModel
-			.find({ agentId: req.userId, ...condition })
-			.count();
+		const totalItems = await vesoModel.find({
+			agentId: req.userId,
+			...condition,
+		});
+		const totalItem = totalItems.length;
 		const totalPage = Math.ceil(totalItem / itemsPerPage);
 
 		if (page > totalPage) {
@@ -123,11 +125,21 @@ const agent = {
 				.status(200)
 				.json({ success: false, message: "Trang không có kết quả" });
 		} else {
+			const totalVeDaDang = totalItems.reduce(
+				(total, veso) => total + veso.soluong,
+				0
+			);
+			const totalVeDaBan = totalItems.reduce(
+				(total, veso) => total + veso.sold,
+				0
+			);
 			const pagination = {
 				currentPage: page,
 				itemsPerPage,
 				totalItem,
 				totalPage,
+				totalVeDaDang,
+				totalVeDaBan,
 			};
 			const vesos = await vesoModel
 				.find({ agentId: req.userId, ...condition })

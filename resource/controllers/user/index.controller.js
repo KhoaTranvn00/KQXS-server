@@ -239,7 +239,7 @@ const index = {
 			const vesos = await vesoModel
 				.find({ ...condition, $expr: { $gt: ["$soluong", "$sold"] } })
 				// .$where("this.sold > this.soluong")
-				.sort({ ngay: "desc" })
+				.sort({ ngay: "asc" })
 				.skip((page - 1) * itemsPerPage)
 				.limit(itemsPerPage)
 				.populate("daiId")
