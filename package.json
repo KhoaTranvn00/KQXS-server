@@ -20,6 +20,7 @@
 		"method-override": "^3.0.0",
 		"mongoose": "^6.1.7",
 		"mongoose-slug-updater": "^3.3.0",
+		"paypal-rest-sdk": "^1.8.1",
 		"pug": "^3.0.2",
 		"request": "^2.88.2",
 		"request-promise": "^4.2.6",
