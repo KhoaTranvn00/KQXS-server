@@ -13,21 +13,24 @@ route.post("/create_payment_url", function (req, res, next) {
 
 	var config = require("config");
 	var dateFormat = require("dateformat");
+	var date = new Date();
 
+	var orderDescription =
+		"Thanh toan don hang: Mua KQXS Minh Ngoc: " +
+		dateFormat(date, "yyyy-mm-dd HH:mm:ss");
+	console.log(orderDescription);
 	var tmnCode = config.get("vnp_TmnCode");
 	var secretKey = config.get("vnp_HashSecret");
 	var vnpUrl = config.get("vnp_Url");
 	var returnUrl = config.get("vnp_ReturnUrl");
 
-	var date = new Date();
-
 	var createDate = dateFormat(date, "yyyymmddHHmmss");
 	var orderId = dateFormat(date, "HHmmss");
-	console.log(req.body);
+	console.log("body", req.body);
 	var amount = req.body.amount;
 	var bankCode = req.body.bankCode;
 
-	var orderInfo = req.body.orderDescription;
+	var orderInfo = orderDescription;
 	var orderType = req.body.orderType;
 	var locale = req.body.language;
 	if (locale === null || locale === "") {
@@ -38,7 +41,7 @@ route.post("/create_payment_url", function (req, res, next) {
 	vnp_Params["vnp_Version"] = "2.1.0";
 	vnp_Params["vnp_Command"] = "pay";
 	vnp_Params["vnp_TmnCode"] = tmnCode;
-	vnp_Params["vnp_Merchant"] = "";
+	// vnp_Params["vnp_Merchant"] = "";
 	vnp_Params["vnp_Locale"] = locale;
 	vnp_Params["vnp_CurrCode"] = currCode;
 	vnp_Params["vnp_TxnRef"] = orderId;
