@@ -97,7 +97,7 @@ const index = {
 			// update soluong veso
 			const veso = await vesoModel.findById(vemuaBody._id);
 			if (veso.soluong >= vemuaBody.soVeMua) {
-				veso.sold = vemuaBody.soVeMua;
+				veso.sold += vemuaBody.soVeMua;
 				await veso.save();
 
 				const vemuaNew = new vemuaModel({
@@ -283,7 +283,7 @@ const index = {
 		const listId = preQuery.map((veso) => veso.id);
 
 		const totalItem = await veMuaModel
-			.find({ uesrId: req.userId, vesoId: { $in: listId } })
+			.find({ userId: req.userId, vesoId: { $in: listId } })
 			.count();
 		const totalPage = Math.ceil(totalItem / itemsPerPage);
 
@@ -299,7 +299,7 @@ const index = {
 				totalPage,
 			};
 			const vesos = await veMuaModel
-				.find({ uesrId: req.userId, vesoId: { $in: listId } })
+				.find({ userId: req.userId, vesoId: { $in: listId } })
 				.sort({ ngay: "desc" })
 				.skip((page - 1) * itemsPerPage)
 				.limit(itemsPerPage)

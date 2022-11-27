@@ -1,4 +1,5 @@
 const route = require("express").Router();
+const payModel = require("../../models/pay.model");
 
 route.get("/", function (req, res) {
 	return res.json({ success: true });
@@ -69,10 +70,18 @@ route.post("/create_payment_url", function (req, res, next) {
 	return res.json({ url: vnpUrl });
 });
 
-route.get("/vnpay_return", function (req, res, next) {
+route.get("/vnpay_return", async function (req, res, next) {
 	var vnp_Params = req.query;
 
 	var secureHash = vnp_Params["vnp_SecureHash"];
+
+	const pay = await payModel.findById(secureHash);
+
+	if (pay) {
+		return res.json({ status: "error", message: "Mã hóa đơn đã được sử dụng" });
+	} else {
+		const newPay = await payModel.create({ _id: secureHash });
+	}
 
 	delete vnp_Params["vnp_SecureHash"];
 	delete vnp_Params["vnp_SecureHashType"];
@@ -91,10 +100,10 @@ route.get("/vnpay_return", function (req, res, next) {
 
 	if (secureHash === signed) {
 		//Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
-		return res.json({ success: true });
+		return res.json({ status: "success", message: "Thanh toán thành công" });
 		// res.render('success', {code: vnp_Params['vnp_ResponseCode']})
 	} else {
-		return res.json({ success: false });
+		return res.json({ status: "error", message: "Mã thanh toán không hợp lệ" });
 	}
 });
 
