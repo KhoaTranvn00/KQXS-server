@@ -5,7 +5,7 @@ const formatDate = require("./formatDate");
 
 const crawlDataMN = async (dai, ngay) => {
 	let result = null;
-	const url = `https://xosodacbiet.com/xsmn/xs${dai.kihieu}/ngay-${ngay}`;
+	const url = `https://xsdb.me/xsmn/xs${dai.kihieu}/ngay-${ngay}`;
 	console.log(url);
 	await request.get(url, (err, response, body) => {
 		if (err) {
