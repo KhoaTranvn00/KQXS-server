@@ -1,6 +1,5 @@
 const request = require("request-promise");
 const cheerio = require("cheerio");
-
 const formatDate = require("./formatDate");
 
 const crawlDataMN = async (dai, ngay) => {
@@ -41,7 +40,6 @@ const crawlDataMN = async (dai, ngay) => {
 				[giai7],
 				[giai8],
 			];
-			// console.log(ketqua);
 			result = { ketqua };
 		}
 	});
@@ -51,7 +49,6 @@ const crawlDataMN = async (dai, ngay) => {
 		dai: dai._id,
 		ngay: new Date(formatDate.dayMonth(ngay)),
 	};
-	console.log(result);
 	return result;
 };
 
