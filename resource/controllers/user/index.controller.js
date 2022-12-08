@@ -211,7 +211,8 @@ const index = {
 			condition.daiId = daiId;
 		}
 		if (veso) {
-			condition.veso = veso;
+			condition.veso = { $regex: ".*" + veso + "$" };
+			// condition.veso = veso;
 		}
 		if (ngay) {
 			condition.ngay = ngay;
