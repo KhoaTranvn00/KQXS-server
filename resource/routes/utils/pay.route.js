@@ -15,6 +15,7 @@ route.post("/create_payment_url", function (req, res, next) {
 	var config = require("config");
 	var dateFormat = require("dateformat");
 	var date = new Date();
+	date.setMinutes(10);
 
 	var orderDescription =
 		"Thanh toan don hang: Mua KQXS Minh Ngoc: " +

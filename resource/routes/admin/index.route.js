@@ -11,5 +11,7 @@ route.post("/auth/login", controller.login);
 route.get("/auth/load", middleware.verifyTokenAdmin, controller.loadAdmin);
 // route.get("/get-ve-mua", middleware.verifyTokenAdmin, adminController.getVeMua);
 route.get("/get-ve-mua", adminController.getVeMua);
+route.get("/get-bao-cao", adminController.getBaoCao);
+route.post("/gen-thong-bao-agent", adminController.genThongBaoAgent);
 
 module.exports = route;

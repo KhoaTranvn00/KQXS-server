@@ -301,7 +301,11 @@ const index = {
 			};
 			const vesos = await veMuaModel
 				.find({ userId: req.userId, vesoId: { $in: listId } })
-				.sort({ ngay: "desc" })
+				.populate({
+					path: "vesoId",
+					options: { sort: { ngay: -1 } },
+				})
+				// .sort({ ngay: "asc" })
 				.skip((page - 1) * itemsPerPage)
 				.limit(itemsPerPage)
 				.populate({
@@ -372,7 +376,7 @@ const index = {
 				totalPage,
 			};
 			const thongbaos = await thongbaoModel
-				.find({ uesrId: req.userId, role: 1 })
+				.find({ userId: req.userId, role: 1 })
 				.sort({ createdAt: "desc" })
 				.skip((page - 1) * itemsPerPage)
 				.limit(itemsPerPage)

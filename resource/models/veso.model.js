@@ -11,9 +11,9 @@ const vemua = require("./vemua.model");
 const VesoSchema = new Schema({
 	agentId: { type: ObjectId, ref: userModel, required: true },
 	veso: { type: "String", required: true, length: 6 },
-	daiId: { type: ObjectId, ref: daiModel },
-	ngay: { type: Date },
-	thuId: { type: "Number", ref: thuModel },
+	daiId: { type: ObjectId, ref: daiModel, required: true },
+	ngay: { type: Date, required: true },
+	thuId: { type: "Number", ref: thuModel, required: true },
 	kihieu: { type: "String", required: true },
 	soluong: { type: "Number", required: true },
 	// 0 - chua do

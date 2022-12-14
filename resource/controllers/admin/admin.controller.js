@@ -1,6 +1,8 @@
 const filterData = require("../../utils/filterData");
 const veMuaModel = require("../../models/vemua.model");
 const vesoModel = require("../../models/veso.model");
+const thongBaoAgentModel = require("../../models/thongBaoAgent.model");
+const formatDate = require("../../utils/formatDate");
 
 const admin = {
 	getVeMua2: async (req, res) => {
@@ -120,6 +122,147 @@ const admin = {
 				pagination,
 			});
 		}
+	},
+
+	getBaoCao: async (req, res) => {
+		const vesos = await vesoModel.aggregate([
+			{
+				$group: {
+					_id: {
+						year: { $year: "$ngay" },
+						month: { $month: "$ngay" },
+					},
+					count: { $sum: 1 },
+					totalQuality: { $sum: "$soluong" },
+					totalSold: { $sum: "$sold" },
+				},
+			},
+			{
+				$sort: {
+					"_id.year": -1,
+					"_id.month": -1,
+				},
+			},
+		]);
+
+		const groupStatus = await vesoModel.aggregate([
+			{
+				$group: {
+					_id: {
+						year: { $year: "$ngay" },
+						month: { $month: "$ngay" },
+						status: "$status",
+					},
+					count: { $sum: 1 },
+				},
+			},
+			{
+				$sort: {
+					"_id.year": -1,
+					"_id.month": -1,
+				},
+			},
+		]);
+		const totalQuality = vesos.map((item) => ({
+			x: `Tháng ${item._id.month}`,
+			y: item.totalQuality,
+		}));
+
+		const totalSold = vesos.map((item) => ({
+			x: `Tháng ${item._id.month}`,
+			y: item.totalSold,
+		}));
+
+		const count = vesos.map((item) => ({
+			x: `Tháng ${item._id.month}`,
+			y: item.count,
+		}));
+
+		const trung = groupStatus
+			.filter((item) => item._id.status == 2)
+			.map((item2) => ({
+				x: `Tháng ${item2._id.month}`,
+				y: item2.count,
+			}));
+		const kotrung = groupStatus
+			.filter((item) => item._id.status == 1)
+			.map((item2) => ({
+				x: `Tháng ${item2._id.month}`,
+				y: item2.count,
+			}));
+		const chuacokq = groupStatus
+			.filter((item) => item._id.status == 0)
+			.map((item2) => ({
+				x: `Tháng ${item2._id.month}`,
+				y: item2.count,
+			}));
+		console.log("groupStatus", groupStatus);
+		console.log("trung", trung);
+		console.log("kotrung", kotrung);
+		console.log("chuacokq", chuacokq);
+
+		const response = {
+			success: true,
+			totalQuality,
+			totalSold,
+			count,
+			trung,
+			kotrung,
+			chuacokq,
+		};
+		// console.log("vesos:", totalQuality);
+		return res.status(200).json(response);
+	},
+
+	genThongBaoAgent: async (req, res) => {
+		const { ngay } = req.body;
+		const ngayDate = new Date(ngay);
+		const isUp = await thongBaoAgentModel.find({ ngay: ngayDate });
+		if (isUp.length !== 0) {
+			return res.status(200).json({
+				success: false,
+				message: `Đã thống kê vé số còn tồn cho ngày ${formatDate.ymdTdmy(
+					ngay
+				)}`,
+			});
+		}
+		const vesos = await vesoModel.find({ ngay: ngayDate });
+		let veEObject = {};
+		vesos.forEach((veso) => {
+			if (veEObject.hasOwnProperty(veso.agentId)) {
+				veEObject[veso.agentId].push({
+					vesoId: veso._id,
+					soVeE: veso.soluong - veso.sold,
+				});
+			} else {
+				veEObject[veso.agentId] = [
+					{
+						vesoId: veso._id,
+						soVeE: veso.soluong - veso.sold,
+					},
+				];
+			}
+		});
+		for (const veE in veEObject) {
+			veENew = await thongBaoAgentModel.create({
+				agentId: veE,
+				ngay: ngayDate,
+				vesos: veEObject[veE],
+			});
+			// console.log({
+			// 	agentId: veE,
+			// 	ngay: ngayDate,
+			// 	vesos: veEObject[veE],
+			// });
+		}
+		// console.log(veEObject);
+		return res.status(200).json({
+			success: true,
+			message: `Thống kê vé số còn tồn cho ngày ${formatDate.ymdTdmy(
+				ngay
+			)} thành công`,
+			veEObject,
+		});
 	},
 };
 
